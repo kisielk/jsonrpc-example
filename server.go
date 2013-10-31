@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"io"
 	"log"
 	"net/http"
 	"net/rpc"
@@ -23,6 +24,7 @@ func (s *JSONRPCServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		log.Print("rpc hijacking ", req.RemoteAddr, ": ", err.Error())
 		return
 	}
+	io.WriteString(conn, "HTTP/1.0 200 Connected to Go JSON-RPC\n\n")
 	codec := jsonrpc.NewServerCodec(conn)
 	log.Println("ServeCodec")
 	s.Server.ServeCodec(codec)
